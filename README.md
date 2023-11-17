@@ -41,4 +41,3 @@ Ensure you have your Veracode credentials file locally available for the utility
 
 Feel free to contribute or report issues on [GitHub](https://github.com/your-username/MitigationExpire).
 
-**Happy Mitigating!**
