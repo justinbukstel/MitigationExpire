@@ -1,6 +1,6 @@
 # MitigationExpire
 
-MitigationExpire is a utility designed to expire mitigations in Veracode for both Static and SCA. This tool specifically targets policy-level mitigations for Static and SCA vulnerability mitigations, excluding license mitigations. The expiration timeline is set at findings that have been mitigated for more than 30 days.
+MitigationExpire is a utility designed to expire mitigations in Veracode for both Static and SCA. This tool specifically targets policy-level mitigations for Static and SCA vulnerability mitigations, excluding license mitigations. The expiration timeline is set at findings that have been mitigated for more than 30 days (default). If you want to change the days, you can edit the days_threshold variable in the script
 
 ## Requirements
 
