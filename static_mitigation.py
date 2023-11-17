@@ -8,12 +8,15 @@ url_applications_static = "https://api.veracode.com/appsec/v1/applications/"
 url_applications_sca_annotations = "https://api.veracode.com/srcclr/v3/applications/{}/sca_annotations"
 headers = {"User-Agent": "Python HMAC"}
 
+# Set Days Threshold for number of days
+days_threshold = 30
+
 # Function to create SCA annotations
 def create_sca_annotations(app_guid, component_id, cve_name, comment):
     # Define the annotations input for SCA
     annotations_input_sca = {
         "action": "REJECT",
-        "comment": "These are older than 30 days",
+        "comment": "These have expired",
         "annotation_type": "VULNERABILITY",
         "annotations": [
             {
@@ -91,7 +94,7 @@ if response_applications_static.status_code == 200:
                             current_datetime_static = datetime.now(timezone.utc)
 
                             # Check if the approval is older than 30 days
-                            if current_datetime_static - approval_date_static > timedelta(days=0):
+                            if current_datetime_static - approval_date_static > timedelta(days=days_threshold):
                                 print(f"Static Issue ID: {issue_id_static}, Most recent APPROVED annotation older than 30 days")
                                 issue_ids_to_reject_static.append(str(issue_id_static))
 
@@ -100,7 +103,7 @@ if response_applications_static.status_code == 200:
                     # Create the annotations input JSON (Static)
                     annotations_input_static = {
                         "issue_list": ",".join(issue_ids_to_reject_static),
-                        "comment": "These are older than 30 days",
+                        "comment": "These have expired",
                         "action": "REJECTED"
                     }
 
@@ -150,7 +153,7 @@ if response_applications_static.status_code == 200:
                     current_datetime_sca = datetime.now(timezone.utc)
 
                     # Check if the approval is older than 30 days
-                    if current_datetime_sca - approval_date_sca > timedelta(days=0):
+                    if current_datetime_sca - approval_date_sca > timedelta(days=days_threshold):
                         component_id_sca = annotation_sca["component"]["id"]
                         cve_name_sca = annotation_sca["vulnerability"]["cve_name"]
                         comment_sca = annotation_sca["latest_comment"]
