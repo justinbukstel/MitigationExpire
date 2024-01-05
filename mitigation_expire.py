@@ -41,6 +41,48 @@ def create_sca_annotations(app_guid, component_id, cve_name, comment):
         print(f"Error creating SCA annotations. Status code: {response_annotations_sca.status_code}")
         print(response_annotations_sca.text)
 
+
+# New function that creates SCA annotation including annotation type
+# overloaded function
+def create_sca_annotations(app_guid, component_id, cve_name, comment, annotation_type):
+    # Define the annotations input for SCA
+    annotations_input_sca = {
+        "action": "REJECT",
+        "comment": "[Expired] This has expired " + str(comment),
+        "annotation_type": str(annotation_type).capitalize(),
+        "annotations": [
+            {
+                "component_id": component_id,
+                "cve_name": cve_name
+            }
+        ]
+    }
+
+
+    # Convert the dictionary to JSON for SCA
+    annotations_input_json_sca = json.dumps(annotations_input_sca)
+
+    # Make the POST request to create SCA annotations
+    url_annotations_sca = f"https://api.veracode.com/srcclr/v3/applications/{app_guid}/sca_annotations"
+    headers["Content-Type"] = "application/json"  # Add Content-Type header
+    response_annotations_sca = requests.post(url_annotations_sca, data=annotations_input_json_sca, auth=RequestsAuthPluginVeracodeHMAC(), headers=headers)
+
+    # Check if the POST request was successful for SCA
+    if response_annotations_sca.status_code == 200:
+        print("SCA Annotations created successfully.")
+    else:
+        print(f"Error creating SCA annotations. Status code: {response_annotations_sca.status_code}")
+        print(response_annotations_sca.text)
+
+
+
+
+
+
+
+
+
+
 # Make the GET request to get Static applications
 response_applications_static = requests.get(url_applications_static, auth=RequestsAuthPluginVeracodeHMAC(), headers=headers)
 
