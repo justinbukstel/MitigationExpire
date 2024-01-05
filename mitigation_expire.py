@@ -6,6 +6,9 @@ from veracode_api_signing.plugin_requests import RequestsAuthPluginVeracodeHMAC
 # Veracode API endpoints
 url_applications_static = "https://api.veracode.com/appsec/v1/applications/"
 url_applications_sca_annotations = "https://api.veracode.com/srcclr/v3/applications/{}/sca_annotations"
+url_applications_sca_annotations_vuln = "https://api.veracode.com/srcclr/v3/applications/{}/sca_annotations?annotation_type=VULNERABILITY&annotation_status=ACCEPTED"
+url_applications_sca_annotations_lice = "https://api.veracode.com/srcclr/v3/applications/{}/sca_annotations?annotation_type=LICENSE&annotation_status=ACCEPTED"
+
 headers = {"User-Agent": "Python HMAC"}
 
 # Set Days Threshold for the number of days
@@ -44,17 +47,26 @@ def create_sca_annotations(app_guid, component_id, cve_name, comment):
 
 # New function that creates SCA annotation including annotation type
 # overloaded function
-def create_sca_annotations(app_guid, component_id, cve_name, comment, annotation_type):
-    # Define the annotations input for SCA
+def create_sca_annotations_x(app_guid, component_id, comment, annotation_type=None, license_id=None, cve_name=None):
+    a_x=int()
+    annotation_option = [{
+                "component_id": str(component_id),
+                "cve_name": str(cve_name)
+            }, 
+            {   "component_id": str(component_id),
+                "license_id": str(license_id) }]
+                
+     if str(annotation_type) = "VULNERABILITY":
+             a_x=0
+     elif str(annotation_type) = "LICENSE":
+             a_x=1
+    # annotation_license # Define the annotations input for SCA
     annotations_input_sca = {
         "action": "REJECT",
         "comment": "[Expired] This has expired " + str(comment),
         "annotation_type": str(annotation_type).capitalize(),
         "annotations": [
-            {
-                "component_id": component_id,
-                "cve_name": cve_name
-            }
+            annotation_option[a_x]
         ]
     }
 
